@@ -6,17 +6,25 @@ class RenderWindow;
 Snake::Snake(sf::RenderWindow* _window)
 :window(_window)
 {
-    snakeHead = sf::RectangleShape(sf::Vector2f(50,50));
-    snakeHead.setFillColor(sf::Color(sf::Color::White));
-    snakeHead.setPosition(200,200);
+    auto snakePart = sf::RectangleShape(sf::Vector2f(50,50));
+    snakePart.setFillColor(sf::Color(sf::Color::White));
+    snakePart.setPosition(200,200);
+
+    snakeBody.push_back(snakePart);
 }
 
 void Snake::drawSnakeBody()
 {
-    window->draw(snakeHead);
+    for (const auto snakePart : snakeBody)
+    {
+        window->draw(snakePart);
+    }
 }
 
 void Snake::moveSnakeBody(const sf::Vector2i& _direction)
 {
-    snakeHead.move(50 * _direction.x, 50 * _direction.y );
+    for (auto& snakePart : snakeBody)
+    {
+        snakePart.move(50 * _direction.x, 50 * _direction.y);
+    }
 }

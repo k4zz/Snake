@@ -14,8 +14,6 @@ public:
 private:
     std::vector<sf::RectangleShape> snakeBody;
     std::vector<sf::Vector2i> snakeDirections;
-    sf::RectangleShape snakeHead;
-    sf::Vector2i snakeHeadDirection;
 
     sf::RenderWindow* window;
 };

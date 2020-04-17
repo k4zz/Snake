@@ -3,7 +3,7 @@
 Game::Game(sf::RenderWindow *_window)
         : window(_window)
         , snake(_window)
-        , snakeNextDirection(sf::Vector2i(0,0))
+        , snakeNextDirection(sf::Vector2i(1,0))
 {}
 
 void Game::gameLoop()

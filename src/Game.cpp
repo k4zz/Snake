@@ -1,10 +1,18 @@
 #include "Game.h"
 
+#include <iostream>
+
 Game::Game(sf::RenderWindow *_window)
         : window(_window)
         , snake(_window)
         , snakeNextDirection(sf::Vector2i(1,0))
-{}
+        , device(std::random_device())
+        , randomGenerator(std::mt19937(std::time(0)))
+        , randomFoodPosition(std::uniform_int_distribution<int>(0,7))
+        , food(Food(_window, sf::Vector2i(randomFoodPosition(randomGenerator), randomFoodPosition(randomGenerator))))
+{
+
+}
 
 void Game::gameLoop()
 {
@@ -38,12 +46,23 @@ void Game::gameLoop()
                         snakeNextDirection.x = 0;
                         snakeNextDirection.y = 1;
                         break;
+                    case sf::Keyboard::Escape:
+                        window->close();
                 }
             }
 
         }
 
-        snake.moveSnakeBody(snakeNextDirection);
+        // calculation phase
+
+        if(isOnFood())
+        {
+            snake.ateFood();
+        }
+
+        snake.moveBody(snakeNextDirection);
+
+        // draw phase
         draw();
 
     }
@@ -53,6 +72,12 @@ void Game::draw()
 {
 
     window->clear();
-    snake.drawSnakeBody();
+    food.draw();
+    snake.draw();
     window->display();
+}
+
+bool Game::isOnFood()
+{
+    return food.getPosition() == snake.getHeadPosition();
 }

@@ -7,7 +7,7 @@ class RenderWindow;
 Snake::Snake(sf::RenderWindow* _window)
         : window(_window)
 {
-    for (int initialBodyLenght = 0; initialBodyLenght < 7; initialBodyLenght++)
+    for (int initialBodyLenght = 0; initialBodyLenght < 4; initialBodyLenght++)
     {
         auto initSnakePart = sf::RectangleShape(sf::Vector2f(50, 50));
         initSnakePart.setFillColor(sf::Color(sf::Color::White));
@@ -21,7 +21,7 @@ Snake::Snake(sf::RenderWindow* _window)
 
 }
 
-void Snake::drawSnakeBody()
+void Snake::draw() const
 {
     for (const auto& snakePart : snakeParts)
     {
@@ -29,8 +29,9 @@ void Snake::drawSnakeBody()
     }
 }
 
-void Snake::moveSnakeBody(sf::Vector2i& _direction)
+void Snake::moveBody(sf::Vector2i& _direction)
 {
+    lastDir = snakePartsDirections.back();
     snakePartsDirections.pop_back();
     snakePartsDirections.insert(snakePartsDirections.begin(), _direction);
 
@@ -41,4 +42,19 @@ void Snake::moveSnakeBody(sf::Vector2i& _direction)
         snakePart.move(50 * snakePartsDirections.at(i).x, 50 * snakePartsDirections.at(i).y);
         i++;
     }
+}
+
+const sf::Vector2f& Snake::getHeadPosition() const
+{
+    return snakeParts.at(0).getPosition();
+}
+
+void Snake::ateFood()
+{
+    auto newBody = sf::RectangleShape(sf::Vector2f(50,50));
+    auto newBodyDir = sf::Vector2i(0,0);
+    newBody.setFillColor(sf::Color::White);
+    newBody.setPosition(snakeParts.back().getPosition());
+    snakeParts.push_back(newBody);
+    snakePartsDirections.insert(snakePartsDirections.begin(),newBodyDir);
 }

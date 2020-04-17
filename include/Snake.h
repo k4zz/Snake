@@ -4,16 +4,24 @@
 
 #include "SFML/Graphics.hpp"
 
+namespace
+{
+    using SnakeParts = std::vector<sf::RectangleShape>;
+    using SnakePartsDirections = std::vector<sf::Vector2i>;
+}
+
 class Snake
 {
 public:
     Snake(sf::RenderWindow* window);
-    void moveSnakeBody(const sf::Vector2i& _direction);
+
+    void moveSnakeBody(sf::Vector2i& _direction);
+
     void drawSnakeBody();
 
 private:
-    std::vector<sf::RectangleShape> snakeBody;
-    std::vector<sf::Vector2i> snakeDirections;
+    SnakeParts snakeParts;
+    SnakePartsDirections snakePartsDirections;
 
     sf::RenderWindow* window;
 };

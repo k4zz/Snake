@@ -1,30 +1,44 @@
 #include "Snake.h"
 
 class RectangleShape;
+
 class RenderWindow;
 
 Snake::Snake(sf::RenderWindow* _window)
-:window(_window)
+        : window(_window)
 {
-    auto snakePart = sf::RectangleShape(sf::Vector2f(50,50));
-    snakePart.setFillColor(sf::Color(sf::Color::White));
-    snakePart.setPosition(200,200);
+    for (int initialBodyLenght = 0; initialBodyLenght < 7; initialBodyLenght++)
+    {
+        auto initSnakePart = sf::RectangleShape(sf::Vector2f(50, 50));
+        initSnakePart.setFillColor(sf::Color(sf::Color::White));
+        initSnakePart.setPosition(200 - initialBodyLenght * 50, 200);
+        snakeParts.emplace_back(initSnakePart);
 
-    snakeBody.push_back(snakePart);
+        auto initialBodyDirection = sf::Vector2i(1,0);
+        snakePartsDirections.emplace_back(initialBodyDirection);
+    }
+
+
 }
 
 void Snake::drawSnakeBody()
 {
-    for (const auto snakePart : snakeBody)
+    for (const auto& snakePart : snakeParts)
     {
         window->draw(snakePart);
     }
 }
 
-void Snake::moveSnakeBody(const sf::Vector2i& _direction)
+void Snake::moveSnakeBody(sf::Vector2i& _direction)
 {
-    for (auto& snakePart : snakeBody)
+    snakePartsDirections.pop_back();
+    snakePartsDirections.insert(snakePartsDirections.begin(), _direction);
+
+    //TODO: looks so bad :(
+    int i = 0;
+    for (auto& snakePart : snakeParts)
     {
-        snakePart.move(50 * _direction.x, 50 * _direction.y);
+        snakePart.move(50 * snakePartsDirections.at(i).x, 50 * snakePartsDirections.at(i).y);
+        i++;
     }
 }

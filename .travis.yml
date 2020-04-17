@@ -1,0 +1,27 @@
+language: c++
+
+matrix:
+  include:
+    - os: linux
+      compiler:
+        - gcc
+
+install:
+  - mkdir cmake-3.16.5 && cd cmake-3.16.5
+  - travis_retry wget --no-check-certificate https://github.com/Kitware/CMake/releases/download/v3.16.5/cmake-3.16.5-Linux-x86_64.tar.gz
+  - tar -xvf cmake-3.16.5-Linux-x86_64.tar.gz > /dev/null
+  - mv cmake-3.16.5-Linux-x86_64 cmake-install
+  - PATH=${TRAVIS_BUILD_DIR}/cmake-3.16.5/cmake-install:${TRAVIS_BUILD_DIR}/cmake-3.16.5/cmake-install/bin:$PATH
+  - cd ${TRAVIS_BUILD_DIR}
+
+before_script:
+  - wget https://www.sfml-dev.org/files/SFML-2.5.1-linux-gcc-64-bit.tar.gz -O /tmp/sfml.tar.gz
+  - tar -xzf /tmp/sfml.tar.gz
+  - sudo cp -r SFML-2.5.1/* /usr/
+  - sudo apt-get install -y libjpeg62-dev libsndfile1-dev libglew1.5 libglew1.5-dev libfreetype6 libjpeg-turbo8 libjpeg8 libopenal-data libopenal1  libxrandr2 libxrender1 libsoil1
+
+script:
+  - mkdir -p build
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=Debug ..
+  - make

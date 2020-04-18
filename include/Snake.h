@@ -29,4 +29,5 @@ private:
     sf::Vector2i lastDir;
 
     sf::RenderWindow* window;
+    bool snakeEats;
 };

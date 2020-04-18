@@ -54,13 +54,12 @@ void Game::gameLoop()
         }
 
         // calculation phase
+        snake.moveBody(snakeNextDirection);
 
         if(isOnFood())
         {
             snake.ateFood();
         }
-
-        snake.moveBody(snakeNextDirection);
 
         // draw phase
         draw();

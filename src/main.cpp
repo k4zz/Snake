@@ -3,10 +3,10 @@
 
 int main()
 {
-    sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(400, 400), "Snake");
-    window->setFramerateLimit(5);
+    sf::RenderWindow window(sf::VideoMode(400, 400), "Snake", sf::Style::Close);
+    window.setFramerateLimit(2);
     Game game(window);
-    game.gameLoop();
+    game.startGame();
 
     return 0;
 }

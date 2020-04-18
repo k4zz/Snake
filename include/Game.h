@@ -7,28 +7,45 @@
 #include "Snake.h"
 #include "Food.h"
 
+
+enum class GameState
+{
+    RunGame,
+    GameOver
+};
+
+
 class Game
 {
 public:
-    explicit Game(sf::RenderWindow*);
+    Game(sf::RenderWindow& _window);
 
-    void gameLoop();
+    void startGame();
 
 private:
 
-    bool isOnFood();
+    void mainGameLoop();
+
+    void gameOverLoop();
+
+    bool isSnakeOnFood();
+
     void draw();
 
     std::random_device randomDevice;
     std::mt19937 randomGenerator;
     std::uniform_int_distribution<int> randomFoodPosition;
 
-    sf::RenderWindow* window;
+    sf::RenderWindow& window;
 
     Snake snake;
     sf::Vector2i snakeNextDirection;
 
     Food food;
+
+    GameState gameState;
+
+    bool isSnakeDead();
 
     void createNewFood();
 };

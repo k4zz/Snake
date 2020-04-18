@@ -5,13 +5,14 @@
 class Food
 {
 public:
-    Food(sf::RenderWindow* _window, sf::Vector2i _position);
+    Food(sf::RenderWindow& _window, sf::Vector2i _position);
 
     const sf::Vector2f& getPosition() const;
+    void setNewPosition(const sf::Vector2i _position);
     void draw() const;
 
 private:
     sf::RectangleShape food;
 
-    sf::RenderWindow* window;
+    sf::RenderWindow& window;
 };

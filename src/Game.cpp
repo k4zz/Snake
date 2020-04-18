@@ -6,13 +6,10 @@ Game::Game(sf::RenderWindow *_window)
         : window(_window)
         , snake(_window)
         , snakeNextDirection(sf::Vector2i(1,0))
-        , device(std::random_device())
-        , randomGenerator(std::mt19937(std::time(0)))
+        , randomGenerator(randomDevice())
         , randomFoodPosition(std::uniform_int_distribution<int>(0,7))
         , food(Food(_window, sf::Vector2i(randomFoodPosition(randomGenerator), randomFoodPosition(randomGenerator))))
-{
-
-}
+{}
 
 void Game::gameLoop()
 {

@@ -19,7 +19,7 @@ private:
     bool isOnFood();
     void draw();
 
-    std::random_device device;
+    std::random_device randomDevice;
     std::mt19937 randomGenerator;
     std::uniform_int_distribution<int> randomFoodPosition;
 

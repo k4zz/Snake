@@ -18,7 +18,7 @@ enum class GameState
 class Game
 {
 public:
-    Game(sf::RenderWindow& _window);
+    Game(sf::RenderWindow&, sf::Font&);
 
     void startGame();
 
@@ -35,6 +35,7 @@ private:
     void setDefaultState();
 
     sf::RenderWindow& window;
+    sf::Font& font;
 
     std::random_device randomDevice;
     std::mt19937 randomGenerator;

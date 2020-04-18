@@ -75,9 +75,9 @@ const SnakeParts& Snake::getBodyParts() const
 bool Snake::isSnakeDead()
 {
     bool isSnakeDead = false;
-    for(auto it = 1; it < snakeParts.size() - 1; it++)
+    for(auto i = 1; i < snakeParts.size(); i++)
     {
-        isSnakeDead = snakeParts.at(0).getGlobalBounds().intersects(snakeParts.at(it).getGlobalBounds());
+        isSnakeDead = snakeParts.at(0).getGlobalBounds().intersects(snakeParts.at(i).getGlobalBounds());
         if (isSnakeDead)
             return true;
     }

@@ -1,9 +1,11 @@
 #include "Game.h"
 
 #include <iostream>
+#include <memory>
 
-Game::Game(sf::RenderWindow& _window)
+Game::Game(sf::RenderWindow& _window, sf::Font& _font)
         : window(_window)
+          , font(_font)
           , snake(new Snake(_window))
           , gameState(GameState::RunGame)
           , snakeNextDirection(sf::Vector2i(1, 0))
@@ -72,6 +74,7 @@ void Game::mainGameLoop()
         if (isSnakeDead())
         {
             gameState = GameState::GameOver;
+            break;
         }
 
         if (isSnakeOnFood())
@@ -88,18 +91,29 @@ void Game::mainGameLoop()
 
 void Game::gameOverLoop()
 {
+    sf::Text text;
+    text.setFont(font);
+    text.setString("Game Over");
+    text.setCharacterSize(24);
+    text.setFillColor(sf::Color::White);
+    sf::FloatRect textRect = text.getLocalBounds();
+    text.setOrigin(textRect.left + textRect.width / 2.0f,
+                   textRect.top + textRect.height / 2.0f);
+    text.setPosition(sf::Vector2f(window.getSize().x / 2.0f,
+                                  window.getSize().y / 2.0f));
+    window.draw(text);
+
     while (gameState == GameState::GameOver)
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
-            if(event.type == sf::Event::KeyPressed)
+            if (event.type == sf::Event::KeyPressed)
             {
                 setDefaultState();
                 gameState = GameState::RunGame;
             }
         }
-
     }
 }
 
@@ -126,7 +140,7 @@ bool Game::isSnakeDead()
            snakePosition.x >= windowSize.x ||
            snakePosition.y < 0 ||
            snakePosition.y >= windowSize.y ||
-            snake->isSnakeDead();
+           snake->isSnakeDead();
 }
 
 void Game::createNewFood()
@@ -135,8 +149,8 @@ void Game::createNewFood()
     while (invalidPosition)
     {
         food->setNewPosition(sf::Vector2i(
-                        randomFoodPosition(randomGenerator),
-                        randomFoodPosition(randomGenerator)));
+                randomFoodPosition(randomGenerator),
+                randomFoodPosition(randomGenerator)));
         invalidPosition = false;
         for (const auto& bodyPart : snake->getBodyParts())
         {
@@ -150,7 +164,7 @@ void Game::createNewFood()
 
 void Game::setDefaultState()
 {
-    snake.reset(new Snake(window));
-    food.reset(new Food(window, sf::Vector2i(randomFoodPosition(randomGenerator), randomFoodPosition(randomGenerator))));
-    snakeNextDirection = sf::Vector2i(1,0);
+    snake = std::make_unique<Snake>(window);
+    food = std::make_unique<Food>(window, sf::Vector2i(randomFoodPosition(randomGenerator), randomFoodPosition(randomGenerator)));
+    snakeNextDirection = sf::Vector2i(1, 0);
 }

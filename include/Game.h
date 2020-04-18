@@ -29,4 +29,6 @@ private:
     sf::Vector2i snakeNextDirection;
 
     Food food;
+
+    void createNewFood();
 };

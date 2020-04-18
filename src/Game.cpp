@@ -56,6 +56,7 @@ void Game::gameLoop()
         if(isOnFood())
         {
             snake.ateFood();
+            createNewFood();
         }
 
         // draw phase
@@ -76,4 +77,21 @@ void Game::draw()
 bool Game::isOnFood()
 {
     return food.getPosition() == snake.getHeadPosition();
+}
+
+void Game::createNewFood()
+{
+    bool invalidPosition = true;
+    while (invalidPosition)
+    {
+        food = Food(window, sf::Vector2i(randomFoodPosition(randomGenerator), randomFoodPosition(randomGenerator)));
+        invalidPosition = false;
+        for(const auto& bodyPart : snake.getBodyParts())
+        {
+            if(food.getPosition() == bodyPart.getPosition())
+            {
+                invalidPosition = true;
+            }
+        }
+    }
 }

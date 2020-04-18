@@ -15,13 +15,19 @@ class Snake
 public:
     Snake(sf::RenderWindow* window);
 
-    void moveSnakeBody(sf::Vector2i& _direction);
+    void moveBody(sf::Vector2i& _direction);
+    void draw() const;
 
-    void drawSnakeBody();
+    void ateFood();
+
+    const sf::Vector2f& getHeadPosition() const;
+
 
 private:
     SnakeParts snakeParts;
     SnakePartsDirections snakePartsDirections;
+    sf::Vector2i lastDir;
 
     sf::RenderWindow* window;
+    bool snakeEats;
 };

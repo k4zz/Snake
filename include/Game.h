@@ -1,23 +1,32 @@
 #pragma once
 
+#include <random>
+
 #include "SFML/Graphics.hpp"
 
 #include "Snake.h"
+#include "Food.h"
 
 class Game
 {
 public:
-    Game(sf::RenderWindow*);
+    explicit Game(sf::RenderWindow*);
 
     void gameLoop();
 
 private:
 
-    void calculate();
+    bool isOnFood();
     void draw();
 
-    sf::RenderWindow* window;
-    Snake snake = Snake(nullptr);
+    std::random_device device;
+    std::mt19937 randomGenerator;
+    std::uniform_int_distribution<int> randomFoodPosition;
 
+    sf::RenderWindow* window;
+
+    Snake snake;
     sf::Vector2i snakeNextDirection;
+
+    Food food;
 };

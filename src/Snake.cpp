@@ -71,3 +71,8 @@ void Snake::ateFood()
     auto newBodyDir = sf::Vector2i(0, 0);
     snakePartsDirections.push_back(newBodyDir);
 }
+
+const SnakeParts& Snake::getBodyParts() const
+{
+    return snakeParts;
+}

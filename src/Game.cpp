@@ -4,13 +4,29 @@
 
 Game::Game(sf::RenderWindow& _window)
         : window(_window)
-          , snake(_window)
+          , snake(new Snake(_window))
           , gameState(GameState::RunGame)
           , snakeNextDirection(sf::Vector2i(1, 0))
           , randomGenerator(randomDevice())
           , randomFoodPosition(std::uniform_int_distribution<int>(0, 7))
-          , food(_window, sf::Vector2i(randomFoodPosition(randomGenerator), randomFoodPosition(randomGenerator)))
+          , food(new Food(_window, sf::Vector2i(randomFoodPosition(randomGenerator), randomFoodPosition(randomGenerator))))
 {}
+
+void Game::startGame()
+{
+    while (window.isOpen())
+    {
+        switch (gameState)
+        {
+            case GameState::RunGame:
+                mainGameLoop();
+                break;
+            case GameState::GameOver:
+                gameOverLoop();
+                break;
+        }
+    }
+}
 
 void Game::mainGameLoop()
 {
@@ -51,7 +67,7 @@ void Game::mainGameLoop()
         }
 
         // calculation phase
-        snake.moveBody(snakeNextDirection);
+        snake->moveBody(snakeNextDirection);
 
         if (isSnakeDead())
         {
@@ -60,7 +76,7 @@ void Game::mainGameLoop()
 
         if (isSnakeOnFood())
         {
-            snake.ateFood();
+            snake->ateFood();
             createNewFood();
         }
 
@@ -69,49 +85,48 @@ void Game::mainGameLoop()
     }
 }
 
+
+void Game::gameOverLoop()
+{
+    while (gameState == GameState::GameOver)
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if(event.type == sf::Event::KeyPressed)
+            {
+                setDefaultState();
+                gameState = GameState::RunGame;
+            }
+        }
+
+    }
+}
+
+
 void Game::draw()
 {
     window.clear();
-    food.draw();
-    snake.draw();
+    food->draw();
+    snake->draw();
     window.display();
 }
 
 bool Game::isSnakeOnFood()
 {
-    return food.getPosition() == snake.getHeadPosition();
+    return food->getPosition() == snake->getHeadPosition();
 }
 
 bool Game::isSnakeDead()
 {
-    auto const& snakePosition = snake.getHeadPosition();
+    auto const& snakePosition = snake->getHeadPosition();
     auto const& windowSize = window.getSize();
 
     return snakePosition.x < 0 ||
            snakePosition.x >= windowSize.x ||
            snakePosition.y < 0 ||
            snakePosition.y >= windowSize.y ||
-            snake.isSnakeDead();
-}
-
-void Game::gameOverLoop()
-{
-}
-
-void Game::startGame()
-{
-    while (window.isOpen())
-    {
-        switch (gameState)
-        {
-            case GameState::RunGame:
-                mainGameLoop();
-                break;
-            case GameState::GameOver:
-                gameOverLoop();
-                break;
-        }
-    }
+            snake->isSnakeDead();
 }
 
 void Game::createNewFood()
@@ -119,14 +134,23 @@ void Game::createNewFood()
     bool invalidPosition = true;
     while (invalidPosition)
     {
-        food.setNewPosition(sf::Vector2i(randomFoodPosition(randomGenerator), randomFoodPosition(randomGenerator)));
+        food->setNewPosition(sf::Vector2i(
+                        randomFoodPosition(randomGenerator),
+                        randomFoodPosition(randomGenerator)));
         invalidPosition = false;
-        for (const auto& bodyPart : snake.getBodyParts())
+        for (const auto& bodyPart : snake->getBodyParts())
         {
-            if (food.getPosition() == bodyPart.getPosition())
+            if (food->getPosition() == bodyPart.getPosition())
             {
                 invalidPosition = true;
             }
         }
     }
+}
+
+void Game::setDefaultState()
+{
+    snake.reset(new Snake(window));
+    food.reset(new Food(window, sf::Vector2i(randomFoodPosition(randomGenerator), randomFoodPosition(randomGenerator))));
+    snakeNextDirection = sf::Vector2i(1,0);
 }

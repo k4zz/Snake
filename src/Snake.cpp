@@ -4,11 +4,11 @@ Snake::Snake(sf::RenderWindow& _window)
         : window(_window)
           , snakeEats(false)
 {
-    for (int initialBodyLenght = 0; initialBodyLenght < 4; initialBodyLenght++)
+    for (int initialBodyLenght = 0; initialBodyLenght < 3; initialBodyLenght++)
     {
         auto initSnakePart = sf::RectangleShape(sf::Vector2f(50, 50));
         initSnakePart.setFillColor(sf::Color(sf::Color::Green));
-        initSnakePart.setPosition(sf::Vector2f (200 - initialBodyLenght * 50, 200));
+        initSnakePart.setPosition(sf::Vector2f (150 - initialBodyLenght * 50, 200));
         snakeParts.emplace_back(initSnakePart);
 
         auto initialBodyDirection = sf::Vector2i(1, 0);

@@ -3,10 +3,15 @@
 
 int main()
 {
+    sf::Font font;
+    font.loadFromFile("sansation.ttf");
+
     sf::RenderWindow window(sf::VideoMode(400, 400), "Snake", sf::Style::Close);
     window.setFramerateLimit(2);
     Game game(window);
     game.startGame();
+
+
 
     return 0;
 }

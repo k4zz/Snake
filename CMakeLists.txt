@@ -18,3 +18,10 @@ target_link_libraries(${PROJECT_NAME} sfml-graphics)
 if (STATIC)
     target_compile_definitions(${PROJECT_NAME} PRIVATE SFML_STATIC)
 endif ()
+
+add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_SOURCE_DIR}/rc/arial.ttf
+        ${CMAKE_CURRENT_BINARY_DIR}/arial.ttf)
+

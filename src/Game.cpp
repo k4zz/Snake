@@ -74,7 +74,7 @@ void Game::mainGameLoop()
         if (isSnakeDead())
         {
             gameState = GameState::GameOver;
-            break;
+            return;
         }
 
         if (isSnakeOnFood())
@@ -93,19 +93,20 @@ void Game::gameOverLoop()
 {
     sf::Text text;
     text.setFont(font);
+    text.setCharacterSize(50);
     text.setString("Game Over");
-    text.setCharacterSize(24);
-    text.setFillColor(sf::Color::White);
     sf::FloatRect textRect = text.getLocalBounds();
     text.setOrigin(textRect.left + textRect.width / 2.0f,
                    textRect.top + textRect.height / 2.0f);
     text.setPosition(sf::Vector2f(window.getSize().x / 2.0f,
                                   window.getSize().y / 2.0f));
+    text.setFillColor(sf::Color::White);
     window.draw(text);
+    window.display();
 
+    sf::Event event;
     while (gameState == GameState::GameOver)
     {
-        sf::Event event;
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::KeyPressed)

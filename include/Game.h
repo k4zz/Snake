@@ -47,4 +47,6 @@ private:
     sf::Vector2i snakeNextDirection;
 
     std::unique_ptr<Food> food;
+
+    int score;
 };

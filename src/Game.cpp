@@ -5,13 +5,14 @@
 
 Game::Game(sf::RenderWindow& _window, sf::Font& _font)
         : window(_window)
-          , font(_font)
-          , snake(new Snake(_window))
-          , gameState(GameState::RunGame)
-          , snakeNextDirection(sf::Vector2i(1, 0))
-          , randomGenerator(randomDevice())
-          , randomFoodPosition(std::uniform_int_distribution<int>(0, 7))
-          , food(new Food(_window, sf::Vector2i(randomFoodPosition(randomGenerator), randomFoodPosition(randomGenerator))))
+        , font(_font)
+        , snake(new Snake(_window))
+        , gameState(GameState::RunGame)
+        , score(0)
+        , snakeNextDirection(sf::Vector2i(1, 0))
+        , randomGenerator(randomDevice())
+        , randomFoodPosition(std::uniform_int_distribution<int>(0, 7))
+        , food(new Food(_window, sf::Vector2i(randomFoodPosition(randomGenerator), randomFoodPosition(randomGenerator))))
 {}
 
 void Game::startGame()
@@ -80,10 +81,13 @@ void Game::mainGameLoop()
         if (isSnakeOnFood())
         {
             snake->ateFood();
+            score++;
             createNewFood();
         }
 
         // draw phase
+        std::string scoreStr = "Snake | Score: " + std::to_string(score);
+        window.setTitle(scoreStr);
         draw();
     }
 }
@@ -168,4 +172,5 @@ void Game::setDefaultState()
     snake = std::make_unique<Snake>(window);
     food = std::make_unique<Food>(window, sf::Vector2i(randomFoodPosition(randomGenerator), randomFoodPosition(randomGenerator)));
     snakeNextDirection = sf::Vector2i(1, 0);
+    score = 0;
 }

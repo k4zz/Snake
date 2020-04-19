@@ -46,26 +46,37 @@ void Game::mainGameLoop()
                 switch (event.key.code)
                 {
                     case sf::Keyboard::Right:
-                        snakeNextDirection.x = 1;
-                        snakeNextDirection.y = 0;
+                        if (snake->getHeadDirection().x != -1)
+                        {
+                            snakeNextDirection.x = 1;
+                            snakeNextDirection.y = 0;
+                        }
                         break;
                     case sf::Keyboard::Up:
-                        snakeNextDirection.x = 0;
-                        snakeNextDirection.y = -1;
+                        if (snake->getHeadDirection().y != 1)
+                        {
+                            snakeNextDirection.x = 0;
+                            snakeNextDirection.y = -1;
+                        }
                         break;
                     case sf::Keyboard::Left:
-                        snakeNextDirection.x = -1;
-                        snakeNextDirection.y = 0;
+                        if (snake->getHeadDirection().x != 1)
+                        {
+                            snakeNextDirection.x = -1;
+                            snakeNextDirection.y = 0;
+                        }
                         break;
                     case sf::Keyboard::Down:
-                        snakeNextDirection.x = 0;
-                        snakeNextDirection.y = 1;
+                        if (snake->getHeadDirection().y != -1)
+                        {
+                            snakeNextDirection.x = 0;
+                            snakeNextDirection.y = 1;
+                        }
                         break;
                     case sf::Keyboard::Escape:
                         window.close();
                 }
             }
-
         }
 
         // calculation phase

@@ -24,9 +24,10 @@ void Snake::draw() const
     }
 }
 
-void Snake::moveBody(sf::Vector2i& _direction)
+void Snake::moveBody(const sf::Vector2i& _direction)
 {
     // push new position into vector of directions
+    currentDirection = _direction;
     snakePartsDirections.pop_back();
     snakePartsDirections.insert(snakePartsDirections.begin(), _direction);
 
@@ -83,4 +84,9 @@ bool Snake::isSnakeDead()
     }
 
     return false;
+}
+
+const sf::Vector2i& Snake::getHeadDirection() const
+{
+    return currentDirection;
 }

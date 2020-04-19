@@ -13,18 +13,21 @@ class Snake
 public:
     Snake(sf::RenderWindow& window);
 
-    void moveBody(sf::Vector2i& _direction);
+    void moveBody(const sf::Vector2i& _direction);
     void draw() const;
 
     void ateFood();
 
     const sf::Vector2f& getHeadPosition() const;
+    const sf::Vector2i& getHeadDirection() const;
     const SnakeParts& getBodyParts() const;
     bool isSnakeDead();
 
 private:
     SnakeParts snakeParts;
     SnakePartsDirections snakePartsDirections;
+
+    sf::Vector2i currentDirection;
 
     sf::RenderWindow& window;
     bool snakeEats;

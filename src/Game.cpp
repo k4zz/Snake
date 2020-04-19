@@ -13,7 +13,7 @@ Game::Game(sf::RenderWindow& _window, sf::Font& _font)
         , snakeNextDirection(sf::Vector2i(1, 0))
         , randomGenerator(std::chrono::steady_clock::now().time_since_epoch().count())
         , randomFoodPosition(std::uniform_int_distribution<int>(0, (window.getSize().x / TILE_SIZE.x) - 1))
-        , food(new Food(sf::Vector2f(0,0), TILE_SIZE))
+        , food(new Food(sf::Vector2f(0, 0), TILE_SIZE))
 {
     createNewFood();
 }
@@ -102,12 +102,33 @@ void Game::mainGameLoop()
         // draw phase
         std::string scoreStr = "Snake | Score: " + std::to_string(score);
         window.setTitle(scoreStr);
-        draw();
+        drawScene();
     }
 }
 
 
 void Game::gameOverLoop()
+{
+    drawGameOver();
+
+    sf::Event event;
+    while (gameState == GameState::GameOver)
+    {
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+
+            if (event.type == sf::Event::KeyPressed)
+            {
+                setDefaultState();
+                gameState = GameState::RunGame;
+            }
+        }
+    }
+}
+
+void Game::drawGameOver() const
 {
     sf::Text text;
     text.setFont(font);
@@ -119,25 +140,15 @@ void Game::gameOverLoop()
     text.setPosition(sf::Vector2f(window.getSize().x / 2.0f,
                                   window.getSize().y / 2.0f));
     text.setFillColor(sf::Color::White);
+    window.clear();
+    window.draw(*snake);
+    window.draw(*food);
     window.draw(text);
     window.display();
-
-    sf::Event event;
-    while (gameState == GameState::GameOver)
-    {
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::KeyPressed)
-            {
-                setDefaultState();
-                gameState = GameState::RunGame;
-            }
-        }
-    }
 }
 
 
-void Game::draw()
+void Game::drawScene() const
 {
     window.clear();
     window.draw(*food);
@@ -145,12 +156,12 @@ void Game::draw()
     window.display();
 }
 
-bool Game::isSnakeOnFood()
+bool Game::isSnakeOnFood() const
 {
     return food->getPosition() == snake->getHeadPosition();
 }
 
-bool Game::isSnakeDead()
+bool Game::isSnakeDead() const
 {
     auto const& snakePosition = snake->getHeadPosition();
     auto const& windowSize = window.getSize();

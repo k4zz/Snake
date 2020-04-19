@@ -7,11 +7,10 @@
 using SnakeParts = std::vector<sf::RectangleShape>;
 using SnakePartsDirections = std::vector<sf::Vector2i>;
 
-
 class Snake
 {
 public:
-    Snake(sf::RenderWindow& window);
+    Snake(sf::RenderWindow& window, const sf::Vector2f&);
 
     void moveBody(const sf::Vector2i& _direction);
     void draw() const;

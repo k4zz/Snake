@@ -1,7 +1,7 @@
 #include "Food.h"
 
-Food::Food(sf::Vector2f _position)
-        : food(sf::RectangleShape(sf::Vector2f(50, 50)))
+Food::Food(const sf::Vector2f& _position, const sf::Vector2f& _size)
+        : food(sf::RectangleShape(_size))
 {
     food.setPosition(sf::Vector2f(_position.x, _position.y));
     food.setFillColor(sf::Color::Red);

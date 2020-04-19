@@ -2,19 +2,21 @@
 
 #include <iostream>
 #include <memory>
+#include <chrono>
 
 Game::Game(sf::RenderWindow& _window, sf::Font& _font)
         : window(_window)
         , font(_font)
-        , snake(new Snake(_window))
+        , snake(new Snake(_window, TILE_SIZE))
         , gameState(GameState::RunGame)
         , score(0)
         , snakeNextDirection(sf::Vector2i(1, 0))
-        , randomGenerator(randomDevice())
-        , randomFoodPosition(std::uniform_int_distribution<int>(0, 7))
-        , food(new Food(
-                sf::Vector2f(randomFoodPosition(randomGenerator) * 50,randomFoodPosition(randomGenerator) * 50)))
-{}
+        , randomGenerator(std::chrono::steady_clock::now().time_since_epoch().count())
+        , randomFoodPosition(std::uniform_int_distribution<int>(0, (window.getSize().x / TILE_SIZE.x) - 1))
+        , food(new Food(sf::Vector2f(0,0), TILE_SIZE))
+{
+    createNewFood();
+}
 
 void Game::startGame()
 {
@@ -166,8 +168,8 @@ void Game::createNewFood()
     while (invalidPosition)
     {
         food->setPosition(sf::Vector2f(
-                randomFoodPosition(randomGenerator) * 50,
-                randomFoodPosition(randomGenerator) * 50));
+                randomFoodPosition(randomGenerator) * TILE_SIZE.x,
+                randomFoodPosition(randomGenerator) * TILE_SIZE.y));
         invalidPosition = false;
         for (const auto& bodyPart : snake->getBodyParts())
         {
@@ -181,9 +183,9 @@ void Game::createNewFood()
 
 void Game::setDefaultState()
 {
-    snake = std::make_unique<Snake>(window);
-    food->setPosition(sf::Vector2f(randomFoodPosition(randomGenerator) * 50,
-                                   randomFoodPosition(randomGenerator) * 50));
+    snake = std::make_unique<Snake>(window, TILE_SIZE);
+    food->setPosition(sf::Vector2f(randomFoodPosition(randomGenerator) * TILE_SIZE.x,
+                                   randomFoodPosition(randomGenerator) * TILE_SIZE.y));
     snakeNextDirection = sf::Vector2i(1, 0);
     score = 0;
 }

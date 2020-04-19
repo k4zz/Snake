@@ -18,34 +18,33 @@ enum class GameState
 class Game
 {
 public:
-    Game(sf::RenderWindow& _window);
+    Game(sf::RenderWindow&, sf::Font&);
 
     void startGame();
 
 private:
 
     void mainGameLoop();
-
     void gameOverLoop();
 
-    bool isSnakeOnFood();
-
     void draw();
+    bool isSnakeDead();
+    bool isSnakeOnFood();
+    void createNewFood();
+
+    void setDefaultState();
+
+    sf::RenderWindow& window;
+    sf::Font& font;
 
     std::random_device randomDevice;
     std::mt19937 randomGenerator;
     std::uniform_int_distribution<int> randomFoodPosition;
 
-    sf::RenderWindow& window;
-
-    Snake snake;
-    sf::Vector2i snakeNextDirection;
-
-    Food food;
-
     GameState gameState;
 
-    bool isSnakeDead();
+    std::unique_ptr<Snake> snake;
+    sf::Vector2i snakeNextDirection;
 
-    void createNewFood();
+    std::unique_ptr<Food> food;
 };

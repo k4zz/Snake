@@ -31,11 +31,11 @@ private:
 
     void gameOverLoop();
 
-    void draw();
+    void drawScene() const ;
 
-    bool isSnakeDead();
+    bool isSnakeDead() const;
 
-    bool isSnakeOnFood();
+    bool isSnakeOnFood() const;
 
     void createNewFood();
 
@@ -55,4 +55,6 @@ private:
     std::unique_ptr<Food> food;
 
     int score;
+
+    void drawGameOver() const;
 };

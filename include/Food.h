@@ -2,17 +2,16 @@
 
 #include "SFML/Graphics.hpp"
 
-class Food
+class Food : public sf::Drawable
 {
 public:
-    Food(sf::RenderWindow& _window, sf::Vector2i _position);
+    explicit Food(const sf::Vector2f&, const sf::Vector2f&);
 
     const sf::Vector2f& getPosition() const;
-    void setNewPosition(const sf::Vector2i _position);
-    void draw() const;
+    void setPosition(const sf::Vector2f&);
 
 private:
-    sf::RectangleShape food;
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-    sf::RenderWindow& window;
+    sf::RectangleShape food;
 };

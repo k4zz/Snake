@@ -1,14 +1,13 @@
 #include "Snake.h"
 
-Snake::Snake(sf::RenderWindow& _window)
-        : window(_window)
-          , snakeEats(false)
+Snake::Snake(const sf::Vector2f& _tileSize)
+        : snakeEats(false)
 {
     for (int initialBodyLenght = 0; initialBodyLenght < 3; initialBodyLenght++)
     {
-        auto initSnakePart = sf::RectangleShape(sf::Vector2f(50, 50));
+        auto initSnakePart = sf::RectangleShape(_tileSize);
         initSnakePart.setFillColor(sf::Color(sf::Color::Green));
-        initSnakePart.setPosition(sf::Vector2f (150 - initialBodyLenght * 50, 200));
+        initSnakePart.setPosition(sf::Vector2f(3 * _tileSize.x - initialBodyLenght * _tileSize.x, 4 * _tileSize.y));
         snakeParts.emplace_back(initSnakePart);
 
         auto initialBodyDirection = sf::Vector2i(1, 0);
@@ -16,12 +15,10 @@ Snake::Snake(sf::RenderWindow& _window)
     }
 }
 
-void Snake::draw() const
+void Snake::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-    for (const auto& snakePart : snakeParts)
-    {
-        window.draw(snakePart);
-    }
+    for (const auto& part : snakeParts)
+        target.draw(part, states);
 }
 
 void Snake::moveBody(const sf::Vector2i& _direction)
@@ -42,7 +39,8 @@ void Snake::moveBody(const sf::Vector2i& _direction)
         }
         else
         {
-            it->move(sf::Vector2f (50 * snakePartsDirections.at(i).x, 50 * snakePartsDirections.at(i).y));
+            it->move(sf::Vector2f(it->getSize().x * snakePartsDirections.at(i).x,
+                                  it->getSize().y * snakePartsDirections.at(i).y));
             i++;
         }
     }
@@ -58,7 +56,7 @@ void Snake::ateFood()
     snakeEats = true;
 
     // create new body part
-    auto newBody = sf::RectangleShape(sf::Vector2f(50, 50));
+    auto newBody = sf::RectangleShape(sf::Vector2f(snakeParts.at(0).getSize().x, snakeParts.at(0).getSize().y));
     newBody.setFillColor(sf::Color::Green);
     newBody.setPosition(snakeParts.back().getPosition());
     snakeParts.push_back(newBody);
@@ -76,7 +74,7 @@ const SnakeParts& Snake::getBodyParts() const
 bool Snake::isSnakeDead()
 {
     bool isSnakeDead = false;
-    for(auto i = 1; i < snakeParts.size(); i++)
+    for (auto i = 1; i < snakeParts.size(); i++)
     {
         isSnakeDead = snakeParts.at(0).getGlobalBounds().intersects(snakeParts.at(i).getGlobalBounds());
         if (isSnakeDead)

@@ -14,6 +14,10 @@ enum class GameState
     GameOver
 };
 
+namespace
+{
+    const sf::Vector2f TILE_SIZE(50, 50);
+}
 
 class Game
 {
@@ -23,13 +27,16 @@ public:
     void startGame();
 
 private:
-
     void mainGameLoop();
+
     void gameOverLoop();
 
     void draw();
+
     bool isSnakeDead();
+
     bool isSnakeOnFood();
+
     void createNewFood();
 
     void setDefaultState();
@@ -37,7 +44,6 @@ private:
     sf::RenderWindow& window;
     sf::Font& font;
 
-    std::random_device randomDevice;
     std::mt19937 randomGenerator;
     std::uniform_int_distribution<int> randomFoodPosition;
 

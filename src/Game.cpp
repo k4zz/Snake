@@ -2,18 +2,21 @@
 
 #include <iostream>
 #include <memory>
+#include <chrono>
 
 Game::Game(sf::RenderWindow& _window, sf::Font& _font)
         : window(_window)
         , font(_font)
-        , snake(new Snake(_window))
+        , snake(new Snake(TILE_SIZE))
         , gameState(GameState::RunGame)
         , score(0)
         , snakeNextDirection(sf::Vector2i(1, 0))
-        , randomGenerator(randomDevice())
-        , randomFoodPosition(std::uniform_int_distribution<int>(0, 7))
-        , food(new Food(_window, sf::Vector2i(randomFoodPosition(randomGenerator), randomFoodPosition(randomGenerator))))
-{}
+        , randomGenerator(std::chrono::steady_clock::now().time_since_epoch().count())
+        , randomFoodPosition(std::uniform_int_distribution<int>(0, (window.getSize().x / TILE_SIZE.x) - 1))
+        , food(new Food(sf::Vector2f(0,0), TILE_SIZE))
+{
+    createNewFood();
+}
 
 void Game::startGame()
 {
@@ -137,8 +140,8 @@ void Game::gameOverLoop()
 void Game::draw()
 {
     window.clear();
-    food->draw();
-    snake->draw();
+    window.draw(*food);
+    window.draw(*snake);
     window.display();
 }
 
@@ -164,9 +167,9 @@ void Game::createNewFood()
     bool invalidPosition = true;
     while (invalidPosition)
     {
-        food->setNewPosition(sf::Vector2i(
-                randomFoodPosition(randomGenerator),
-                randomFoodPosition(randomGenerator)));
+        food->setPosition(sf::Vector2f(
+                randomFoodPosition(randomGenerator) * TILE_SIZE.x,
+                randomFoodPosition(randomGenerator) * TILE_SIZE.y));
         invalidPosition = false;
         for (const auto& bodyPart : snake->getBodyParts())
         {
@@ -180,8 +183,9 @@ void Game::createNewFood()
 
 void Game::setDefaultState()
 {
-    snake = std::make_unique<Snake>(window);
-    food = std::make_unique<Food>(window, sf::Vector2i(randomFoodPosition(randomGenerator), randomFoodPosition(randomGenerator)));
+    snake = std::make_unique<Snake>(TILE_SIZE);
+    food->setPosition(sf::Vector2f(randomFoodPosition(randomGenerator) * TILE_SIZE.x,
+                                   randomFoodPosition(randomGenerator) * TILE_SIZE.y));
     snakeNextDirection = sf::Vector2i(1, 0);
     score = 0;
 }

@@ -1,8 +1,7 @@
 #include "Snake.h"
 
-Snake::Snake(sf::RenderWindow& _window, const sf::Vector2f& _tileSize)
-        : window(_window)
-        , snakeEats(false)
+Snake::Snake(const sf::Vector2f& _tileSize)
+        : snakeEats(false)
 {
     for (int initialBodyLenght = 0; initialBodyLenght < 3; initialBodyLenght++)
     {
@@ -16,12 +15,10 @@ Snake::Snake(sf::RenderWindow& _window, const sf::Vector2f& _tileSize)
     }
 }
 
-void Snake::draw() const
+void Snake::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-    for (const auto& snakePart : snakeParts)
-    {
-        window.draw(snakePart);
-    }
+    for (const auto& part : snakeParts)
+        target.draw(part, states);
 }
 
 void Snake::moveBody(const sf::Vector2i& _direction)

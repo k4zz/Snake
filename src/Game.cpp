@@ -7,7 +7,7 @@
 Game::Game(sf::RenderWindow& _window, sf::Font& _font)
         : window(_window)
         , font(_font)
-        , snake(new Snake(_window, TILE_SIZE))
+        , snake(new Snake(TILE_SIZE))
         , gameState(GameState::RunGame)
         , score(0)
         , snakeNextDirection(sf::Vector2i(1, 0))
@@ -141,7 +141,7 @@ void Game::draw()
 {
     window.clear();
     window.draw(*food);
-    snake->draw();
+    window.draw(*snake);
     window.display();
 }
 
@@ -183,7 +183,7 @@ void Game::createNewFood()
 
 void Game::setDefaultState()
 {
-    snake = std::make_unique<Snake>(window, TILE_SIZE);
+    snake = std::make_unique<Snake>(TILE_SIZE);
     food->setPosition(sf::Vector2f(randomFoodPosition(randomGenerator) * TILE_SIZE.x,
                                    randomFoodPosition(randomGenerator) * TILE_SIZE.y));
     snakeNextDirection = sf::Vector2i(1, 0);

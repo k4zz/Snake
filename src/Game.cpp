@@ -12,7 +12,8 @@ Game::Game(sf::RenderWindow& _window, sf::Font& _font)
         , snakeNextDirection(sf::Vector2i(1, 0))
         , randomGenerator(randomDevice())
         , randomFoodPosition(std::uniform_int_distribution<int>(0, 7))
-        , food(new Food(_window, sf::Vector2i(randomFoodPosition(randomGenerator), randomFoodPosition(randomGenerator))))
+        , food(new Food(
+                sf::Vector2f(randomFoodPosition(randomGenerator) * 50,randomFoodPosition(randomGenerator) * 50)))
 {}
 
 void Game::startGame()
@@ -137,7 +138,7 @@ void Game::gameOverLoop()
 void Game::draw()
 {
     window.clear();
-    food->draw();
+    window.draw(*food);
     snake->draw();
     window.display();
 }
@@ -164,9 +165,9 @@ void Game::createNewFood()
     bool invalidPosition = true;
     while (invalidPosition)
     {
-        food->setNewPosition(sf::Vector2i(
-                randomFoodPosition(randomGenerator),
-                randomFoodPosition(randomGenerator)));
+        food->setPosition(sf::Vector2f(
+                randomFoodPosition(randomGenerator) * 50,
+                randomFoodPosition(randomGenerator) * 50));
         invalidPosition = false;
         for (const auto& bodyPart : snake->getBodyParts())
         {
@@ -181,7 +182,8 @@ void Game::createNewFood()
 void Game::setDefaultState()
 {
     snake = std::make_unique<Snake>(window);
-    food = std::make_unique<Food>(window, sf::Vector2i(randomFoodPosition(randomGenerator), randomFoodPosition(randomGenerator)));
+    food->setPosition(sf::Vector2f(randomFoodPosition(randomGenerator) * 50,
+                                   randomFoodPosition(randomGenerator) * 50));
     snakeNextDirection = sf::Vector2i(1, 0);
     score = 0;
 }

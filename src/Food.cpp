@@ -1,17 +1,15 @@
 #include "Food.h"
 
-Food::Food(sf::RenderWindow& _window, sf::Vector2i _position)
-        : window(_window)
-          , food(sf::RectangleShape(sf::Vector2f(50, 50)))
+Food::Food(sf::Vector2f _position)
+        : food(sf::RectangleShape(sf::Vector2f(50, 50)))
 {
-    auto foodPosition = sf::Vector2f(_position.x * 50, _position.y * 50);
-    food.setPosition(foodPosition);
+    food.setPosition(sf::Vector2f(_position.x, _position.y));
     food.setFillColor(sf::Color::Red);
 }
 
-void Food::draw() const
+void Food::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-    window.draw(food);
+    target.draw(food, states);
 }
 
 const sf::Vector2f& Food::getPosition() const
@@ -19,9 +17,8 @@ const sf::Vector2f& Food::getPosition() const
     return food.getPosition();
 }
 
-void Food::setNewPosition(sf::Vector2i _position)
+void Food::setPosition(const sf::Vector2f& _position)
 {
-    auto foodPosition = sf::Vector2f(_position.x * 50, _position.y * 50);
-    food.setPosition(foodPosition);
+    food.setPosition(_position);
 }
 
